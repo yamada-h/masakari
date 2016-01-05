@@ -90,6 +90,8 @@ class NotificationStatusManager(object):
          or args.db_host is None):
             return False
 
+        return True
+
     def _db_connect(self,
                     mysql_user_name,
                     mysql_user_password,
