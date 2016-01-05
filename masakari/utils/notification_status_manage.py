@@ -83,12 +83,12 @@ class NotificationStatusManager(object):
 
     def _check_args(self, args):
         if args.mode != "list":
-            return = False
+            return False
 
         if (args.db_user is None
          or args.db_password is None
          or args.db_host is None):
-            return = False
+            return False
 
     def _db_connect(self,
                     mysql_user_name,
