@@ -61,8 +61,7 @@ class NotificationStatusManager(object):
             parser.print_help()
             return
 
-        msg = "notification status manage execution start"
-        print msg
+        print "notification status manage execution start"
 
         try:
             count = self._get_notification_list_count(
@@ -75,11 +74,9 @@ class NotificationStatusManager(object):
                 subprocess.call(show_cmd, shell=True)
         except:
             # 全ての例外を握りつぶすのよくない
-            msg = "notification status manage execution failure"
-            print msg
+            print "notification status manage execution failure"
 
-        msg = "notification status manage execution end"
-        print msg
+        print "notification status manage execution end"
 
     def _check_args(self, args):
         if args.mode != "list":
@@ -117,10 +114,6 @@ class NotificationStatusManager(object):
         try:
             row_cnt = cursor.execute(sql)
             return row_cnt
-        except:
-            msg = "notification_list select failed"
-            print msg
-            raise
         finally:
             db.close()
 
