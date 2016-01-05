@@ -15,32 +15,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-notification status management tool
-"""
 
 import MySQLdb
 import argparse
 import subprocess
 
-################################################################################
-#
-# (CLASS):notification_status_manage
-#
-################################################################################
 
 class notification_status_manage(object):
-
-    """
-    notification status management class
-    """
-
-
-################################################################################
-#
-# (Constructor):__init__
-#
-################################################################################
 
     def __init__(self):
 
@@ -53,28 +34,18 @@ class notification_status_manage(object):
 
         args = parser.parse_args()
 
-        #command input information check
-        if self._command_input_information_check(parser,args) == "NG":
+        if not self._command_input_information_check(parser,args):
             return
 
         msg = "notification status manage execution start"
         print msg
 
         try:
-
-            #DB connection
-            db = self._db_connect(args.db_user,
-                                  args.db_password,
-                                  args.db_host)
-
-            #mode="list"
             sysout_sql = self._notification_status_list(args.db_user,
                                                         args.db_password,
-                                                        args.db_host,
-                                                        db)
+                                                        args.db_host)
 
-            #sysout
-            if sysout_sql != None:
+            if sysout_sql is not None:
                  subprocess.call(sysout_sql, shell=True)
 
         except:
@@ -86,38 +57,24 @@ class notification_status_manage(object):
             print msg
 
 
-################################################################################
-#
-# (METHOD):_command_input_information_check
-#
-################################################################################
-
     def _command_input_information_check(self,parser,args):
 
-        result = "OK"
-        #command format and input parameter check
-
-        if (args.mode == None
-         or args.db_user == None
-         or args.db_password == None
-         or args.db_host == None):
-            result = "NG"
+        result = True
 
         if args.mode != "list":
-            result = "NG"
+            result = False
+
+        if (args.db_user is None
+         or args.db_password is None
+         or args.db_host is None):
+            result = False
 
         #usage display
-        if result == "NG":
+        if not result:
             parser.print_help()
 
         return result
 
-
-################################################################################
-#
-# (METHOD):_db_connect
-#
-################################################################################
 
     def _db_connect(self,
                     mysql_user_name,
@@ -129,8 +86,7 @@ class notification_status_manage(object):
                                  db='vm_ha',
                                  user=mysql_user_name,
                                  passwd=mysql_user_password,
-                                 charset='utf8'
-                                 )
+                                 charset='utf8')
             return db
 
         except:
@@ -139,17 +95,14 @@ class notification_status_manage(object):
             raise
 
 
-################################################################################
-#
-# (METHOD):_notification_status_list
-#
-################################################################################
-
     def _notification_status_list(self,
                                   mysql_user_name,
                                   mysql_user_password,
-                                  mysql_host_name,
-                                  db):
+                                  mysql_host_name):
+
+        db = self._db_connect(args.db_user,
+                              args.db_password,
+                              args.db_host)
 
         # Execute SQL
         cursor = db.cursor(MySQLdb.cursors.DictCursor)
@@ -165,7 +118,6 @@ class notification_status_manage(object):
                 print msg
                 return None
 
-            # sysout
             else:
                 sql = ("mysql --host=%s --database=vm_ha "
                        "--user=%s --password=%s "
@@ -206,10 +158,8 @@ class notification_status_manage(object):
             db.commit()
             db.close()
 
-################################################################################
 
 if __name__ == '__main__':
-
     notification_status_manage()
 
 
